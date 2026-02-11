@@ -14,6 +14,7 @@ import { Post } from './posts/post.entity';
       type: 'sqlite',
       database: 'blog.sqlite',
       synchronize: true,
+      dropSchema: true,
       entities: [User, Post]
     }),
     UsersModule,

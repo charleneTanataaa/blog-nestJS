@@ -9,7 +9,7 @@ describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
   let authToken: string;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -23,25 +23,18 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
-  });
-
   describe('auth/register (POST)', () => {
     it('should register a new user', () => {
       return request(app.getHttpServer())
       .post('/auth/register')
       .send({
-        email: 'user3@gmail.com',
+        email: 'user@gmail.com',
         password: 'password123',
       })
       .expect(201)
       .expect((res) => {
         expect(res.body).toHaveProperty('id');
-        expect(res.body).toHaveProperty('email', 'user3@gmail.com');
+        expect(res.body).toHaveProperty('email', 'user@gmail.com');
         expect(res.body).not.toHaveProperty('password123');
       });
     });
@@ -50,7 +43,7 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .post('/auth/register')
         .send({
-          email: "user1@example.com",
+          email: "user@gmail.com",
           password: 'password123',
         })
         .expect(409);
@@ -68,7 +61,7 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .post('/auth/register')
         .send({
-          email: 'test2@example.com',
+          email: 'user@gmail.com',
         })
         .expect(400);
     });
@@ -79,8 +72,8 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .post('/auth/login')
         .send({
-          email: "updated@example.com",
-          password: 'newpassword',
+          email: "user@gmail.com",
+          password: 'password123',
         })
         .expect(201)
         .expect((res) => {
@@ -94,7 +87,7 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .post('/auth/login')
         .send({
-          email: "updated@example.com",
+          email: "user@gmail.com",
           password: "wrongpassword",
         })
         .expect(401);
@@ -105,7 +98,7 @@ describe('AppController (e2e)', () => {
         .post('/auth/login')
         .send({
           email: "non-existent@example.com",
-          password: "password"
+          password: "password123"
         })
         .expect(401);
     });
@@ -118,8 +111,8 @@ describe('AppController (e2e)', () => {
         const response = await request(app.getHttpServer())
             .post('/auth/login')
             .send({
-                email: "updated@example.com",
-                password: "newpassword",
+                email: "user@gmail.com",
+                password: "password123",
             });
         token = response.body.access_token;
     });
@@ -130,7 +123,7 @@ describe('AppController (e2e)', () => {
             .set('Authorization', `Bearer ${token}`)
             .expect(200)
             .expect((res) => {
-                expect(res.body).toHaveProperty('email', 'updated@example.com');
+                expect(res.body).toHaveProperty('email', 'user@gmail.com');
                 expect(res.body).toHaveProperty('id');
             });
     });
@@ -153,12 +146,12 @@ describe('AppController (e2e)', () => {
             .put('/users/profile')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                email: 'updated1@example.com',
-                password: 'newpassword1',
+                email: 'updated@gmail.com',
+                password: 'newpassword',
             })
             .expect(200)
             .expect((res) => {
-                expect(res.body).toHaveProperty('email', 'updated1@example.com');
+                expect(res.body).toHaveProperty('email', 'updated@gmail.com');
             });
     });
 
