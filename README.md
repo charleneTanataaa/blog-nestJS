@@ -61,6 +61,9 @@ $ npm run start:prod
 
 $ npm run test:e2e
 
+## Demo
+Video: https://www.loom.com/share/ab003bd99341482abced78c2aeab3d82
+
 ## Author
 Name: Charlene Tanata
 Tech Stack: NestJS, TypeScript, SQL, JWT
